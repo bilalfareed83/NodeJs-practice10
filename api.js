@@ -1,4 +1,6 @@
 const User = require('./models/User');
+const Album = require('./models/Albums');
+const Tracks = require('./models/Tracks');
 
 const signup = async (req, res) => {
   const { firstName, lastName, userName, password } = req.body;
@@ -62,9 +64,37 @@ const userRemove = async (req, res) => {
   }
 };
 
+const createAlbum = async (req, res) => {
+  const { title, singers, tracks } = req.body;
+
+  try {
+    const newAlbum = await new Album({
+      title,
+      singers,
+      tracks,
+    }).save();
+
+    res.send({ message: 'Ablum created', album: newAlbum });
+  } catch (error) {
+    res.status(404).send({ success: false, message: err.message });
+  }
+};
+
+const createTrack = async (req, res) => {
+  try {
+    const newTrack = await new Tracks(req.body).save();
+
+    res.send({ message: 'Track created', album: newTrack });
+  } catch (error) {
+    res.status(404).send({ success: false, message: err.message });
+  }
+};
+
 module.exports = {
   signup,
   login,
   userUpdate,
   userRemove,
+  createAlbum,
+  createTrack,
 };
