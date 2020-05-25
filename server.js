@@ -17,6 +17,10 @@ app.post('/create-album', middleware.uniqueId, api.createAlbum);
 
 app.post('/create-track', middleware.uniqueId, api.createTrack);
 
+app.get('/search', api.search);
+
+app.get('/searchAlbum', api.populateAlbumTrack);
+
 module.exports = ({ port, cb }) => {
   app.listen(port, cb);
 };

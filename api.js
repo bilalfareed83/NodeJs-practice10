@@ -1,6 +1,7 @@
 const User = require('./models/User');
 const Album = require('./models/Albums');
 const Tracks = require('./models/Tracks');
+const mongoose = require('mongoose');
 
 const signup = async (req, res) => {
   const { firstName, lastName, userName, password } = req.body;
@@ -82,11 +83,42 @@ const createAlbum = async (req, res) => {
 
 const createTrack = async (req, res) => {
   try {
-    const newTrack = await new Tracks(req.body).save();
+    const newTrack = await new Tracks({
+      ...req.body,
+      _id: mongoose.Types.ObjectId(),
+    }).save();
 
     res.send({ message: 'Track created', album: newTrack });
   } catch (error) {
     res.status(404).send({ success: false, message: err.message });
+  }
+};
+
+const search = async (req, res) => {
+  if (req.query.type === 'track') {
+    console.log(req.body);
+    const searchTrack = await Tracks.find({
+      'singer.name': {
+        $eq: req.query.name,
+      },
+    });
+    res.send(searchTrack);
+  } else {
+    res.status(404).send({ message: 'track not found' });
+  }
+};
+
+const populateAlbumTrack = async (req, res) => {
+  try {
+    const trackId = '5ecbcf35e32107159893f5c4';
+
+    // const findTrack = await (await Tracks.findById({ id: trackId })).populated(
+    //   'albumId'
+    // );
+    const findAlbum = await Album.findById(trackId).populate('tracks');
+    res.send(findAlbum);
+  } catch (error) {
+    res.status(404).send({ message: 'not found' });
   }
 };
 
@@ -97,4 +129,6 @@ module.exports = {
   userRemove,
   createAlbum,
   createTrack,
+  search,
+  populateAlbumTrack,
 };

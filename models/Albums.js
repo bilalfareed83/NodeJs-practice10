@@ -13,10 +13,7 @@ const albumSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    tracks: {
-      type: Array,
-      default: [],
-    },
+    tracks: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }],
   },
   {
     timestamps: true,

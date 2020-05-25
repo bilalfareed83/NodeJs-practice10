@@ -10,8 +10,8 @@ const trackSchema = new mongoose.Schema(
       lowercase: true,
     },
     albumId: {
-      type: String,
-      trim: true,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Album',
     },
     singer: {
       type: Object,
